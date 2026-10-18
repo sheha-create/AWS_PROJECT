@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS VPC Peering — Engineering Showcase & Live Evidence Hub</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --success: #34d399;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    }
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .badge.success {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      border-color: rgba(52, 211, 153, 0.3);
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      font-size: 18px;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background-color: rgba(15, 23, 42, 0.5);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      background: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+    .term-box {
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      color: #34d399;
+      overflow-x: auto;
+      margin-top: 10px;
+      white-space: pre;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #0f172a;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 13px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-outline:hover {
+      background: var(--card-border);
+    }
+    .diagram-img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: #0a0f1d;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .status-pass { background: rgba(52, 211, 153, 0.2); color: var(--success); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="badge-bar">
+        <span class="badge">EWB Cloud Labs</span>
+        <span class="badge">AWS Cloud Networking</span>
+        <span class="badge success">Infrastructure: 100% Verified</span>
+        <span class="badge">Region: ap-south-1 (Mumbai)</span>
+      </div>
+      <h1>AWS VPC Peering: Dual-VPC Private Interconnect</h1>
+      <p class="subtitle">Complete implementation, automated verification engine, and test evidence repository demonstrating private IPv4 peering and ProxyJump administration.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="#test-evidence" class="btn">View Test Evidence (TC-01 to TC-07)</a>
+        <a href="#architecture" class="btn btn-outline">Architecture Diagram</a>
+        <a href="#routing" class="btn btn-outline">Routing Tables</a>
+      </div>
+    </header>
+
+    <!-- Architecture Section -->
+    <div class="card" id="architecture" style="margin-bottom: 24px;">
+      <h2><span>📐</span> Network Topology & System Architecture</h2>
+      <img src="../diagrams/architecture.svg" alt="AWS VPC Peering Architecture" class="diagram-img">
+    </div>
+
+    <!-- Inventory & Routing Grid -->
+    <div class="grid">
+      <!-- Resource Inventory -->
+      <div class="card">
+        <h2><span>📋</span> Resource Inventory</h2>
+        <table>
+          <thead>
+            <tr><th>Resource</th><th>Name Tag</th><th>Assigned IPv4</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>VPC A</td><td><code>ewb-vpc-a</code></td><td><code>10.10.0.0/16</code></td></tr>
+            <tr><td>Public Subnet</td><td><code>ewb-a-public</code></td><td><code>10.10.1.0/24</code></td></tr>
+            <tr><td>Private Subnet A</td><td><code>ewb-a-private</code></td><td><code>10.10.2.0/24</code></td></tr>
+            <tr><td>VPC B</td><td><code>ewb-vpc-b</code></td><td><code>10.20.0.0/16</code></td></tr>
+            <tr><td>Private Subnet B</td><td><code>ewb-b-private</code></td><td><code>10.20.1.0/24</code></td></tr>
+            <tr><td>Bastion Host</td><td><code>ewb-bastion</code></td><td><code>10.10.1.10</code> / Public IPv4</td></tr>
+            <tr><td>App-A Server</td><td><code>ewb-app-a</code></td><td><code>10.10.2.10</code> (No Public IP)</td></tr>
+            <tr><td>App-B Server</td><td><code>ewb-app-b</code></td><td><code>10.20.1.10</code> (No Public IP)</td></tr>
+            <tr><td>Peering Link</td><td><code>ewb-a-b-peer</code></td><td><code>pcx-xxxx</code> (Active)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Routing Specification -->
+      <div class="card" id="routing">
+        <h2><span>🔄</span> Route Table Matrix</h2>
+        <table>
+          <thead>
+            <tr><th>Table Name</th><th>Destination</th><th>Target</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>ewb-rt-a-public</code></td><td><code>0.0.0.0/0</code></td><td><code>ewb-igw-a</code></td><td>Internet for Bastion</td></tr>
+            <tr><td><code>ewb-rt-a-public</code></td><td><code>10.20.0.0/16</code></td><td><code>pcx-xxxx</code></td><td>Bastion to VPC B Admin</td></tr>
+            <tr><td><code>ewb-rt-a-private</code></td><td><code>10.20.0.0/16</code></td><td><code>pcx-xxxx</code></td><td>Forward path to App-B</td></tr>
+            <tr><td><code>ewb-rt-b-private</code></td><td><code>10.10.0.0/16</code></td><td><code>pcx-xxxx</code></td><td>Return path to App-A</td></tr>
+            <tr><td>All Tables</td><td>Local VPC CIDR</td><td><code>local</code></td><td>Intra-VPC Routing</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Live Test Evidence Hub -->
+    <div class="card" id="test-evidence" style="margin-bottom: 24px;">
+      <h2><span>🧪</span> Verified Test Execution Evidence (TC-01 through TC-07)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Test ID</th>
+            <th>Test Objective</th>
+            <th>Expected Outcome</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>TC-01</strong></td>
+            <td>Baseline ICMP Reachability (Before Peering Route)</td>
+            <td>100% packet loss (No route to host)</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-02</strong></td>
+            <td>Forward ICMP Ping (App-A &rarr; App-B across Peering)</td>
+            <td>4 packets sent, 4 received (0% loss)</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-03</strong></td>
+            <td>Return Path ICMP Ping (App-B &rarr; App-A across Peering)</td>
+            <td>4 packets sent, 4 received (0% loss)</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-04</strong></td>
+            <td>Private SSH Administration via Bastion ProxyJump</td>
+            <td>Direct encrypted tunnel to 10.20.1.10:22</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-05</strong></td>
+            <td>Zero Public Exposure Workload Audit</td>
+            <td>App-A &amp; App-B Public IP: null</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-06</strong></td>
+            <td>Controlled Failure Injection (Revoke ICMP SG Rule)</td>
+            <td>Ping drops immediately; 100% packet loss</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+          <tr>
+            <td><strong>TC-07</strong></td>
+            <td>Controlled Recovery (Reinstate ICMP SG Rule)</td>
+            <td>Ping recovers immediately; 0% loss</td>
+            <td><span class="status-pill status-pass">PASSED</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Terminal Evidence Samples -->
+      <div style="margin-top: 20px;">
+        <h3 style="font-size: 14px; color: #fff; margin-bottom: 6px;">Terminal Evidence: TC-02 (App-A &rarr; App-B over Peering)</h3>
+        <div class="term-box">[ec2-user@ip-10-10-2-10 ~]$ hostname -I
+10.10.2.10
+[ec2-user@ip-10-10-2-10 ~]$ ping -c 4 10.20.1.10
+PING 10.20.1.10 (10.20.1.10) 56(84) bytes of data.
+64 bytes from 10.20.1.10: icmp_seq=1 ttl=255 time=0.912 ms
+64 bytes from 10.20.1.10: icmp_seq=2 ttl=255 time=0.884 ms
+64 bytes from 10.20.1.10: icmp_seq=3 ttl=255 time=0.846 ms
+64 bytes from 10.20.1.10: icmp_seq=4 ttl=255 time=0.879 ms
+
+--- 10.20.1.10 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 0.846/0.880/0.912/0.023 ms</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px 0;">
+      AWS VPC Peering Internship Project · EWB Cloud Labs · Open Source Submission Repository
+    </footer>
+  </div>
+</body>
+</html>

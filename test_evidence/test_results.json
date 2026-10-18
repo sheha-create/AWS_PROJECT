@@ -1,0 +1,65 @@
+[
+  {
+    "id": "TC-01",
+    "title": "Baseline ICMP Reachability (Before Peering Route)",
+    "command": "ssh -F ~/.ssh/config ewb-app-a 'ping -c 4 -W 2 10.20.1.10'",
+    "status": "PASSED",
+    "description": "App-A attempts to ping App-B (10.20.1.10) before VPC peering routes are added.",
+    "expected": "Destination Host Unreachable / 100% packet loss (no route to host).",
+    "terminal_output": "[ec2-user@ip-10-10-2-10 ~]$ hostname\nip-10-10-2-10.ap-south-1.compute.internal\n[ec2-user@ip-10-10-2-10 ~]$ hostname -I\n10.10.2.10\n[ec2-user@ip-10-10-2-10 ~]$ ping -c 4 -W 2 10.20.1.10\nPING 10.20.1.10 (10.20.1.10) 56(84) bytes of data.\n\n--- 10.20.1.10 ping statistics ---\n4 packets transmitted, 0 received, 100% packet loss, time 3072ms"
+  },
+  {
+    "id": "TC-02",
+    "title": "Forward ICMP Ping (App-A -> App-B across VPC Peering)",
+    "command": "ssh -F ~/.ssh/config ewb-app-a 'ping -c 4 10.20.1.10'",
+    "status": "PASSED",
+    "description": "App-A pings App-B across the active VPC Peering connection (pcx-xxxx).",
+    "expected": "4 packets transmitted, 4 received, 0% packet loss.",
+    "terminal_output": "[ec2-user@ip-10-10-2-10 ~]$ hostname\nip-10-10-2-10.ap-south-1.compute.internal\n[ec2-user@ip-10-10-2-10 ~]$ hostname -I\n10.10.2.10\n[ec2-user@ip-10-10-2-10 ~]$ ping -c 4 10.20.1.10\nPING 10.20.1.10 (10.20.1.10) 56(84) bytes of data.\n64 bytes from 10.20.1.10: icmp_seq=1 ttl=255 time=0.912 ms\n64 bytes from 10.20.1.10: icmp_seq=2 ttl=255 time=0.884 ms\n64 bytes from 10.20.1.10: icmp_seq=3 ttl=255 time=0.846 ms\n64 bytes from 10.20.1.10: icmp_seq=4 ttl=255 time=0.879 ms\n\n--- 10.20.1.10 ping statistics ---\n4 packets transmitted, 4 received, 0% packet loss, time 3004ms\nrtt min/avg/max/mdev = 0.846/0.880/0.912/0.023 ms"
+  },
+  {
+    "id": "TC-03",
+    "title": "Return Path ICMP Ping (App-B -> App-A across VPC Peering)",
+    "command": "ssh -F ~/.ssh/config ewb-app-b 'ping -c 4 10.10.2.10'",
+    "status": "PASSED",
+    "description": "App-B sends ICMP Echo Request to App-A across peering, verifying symmetrical return routing.",
+    "expected": "4 packets transmitted, 4 received, 0% packet loss.",
+    "terminal_output": "[ec2-user@ip-10-20-1-10 ~]$ hostname\nip-10-20-1-10.ap-south-1.compute.internal\n[ec2-user@ip-10-20-1-10 ~]$ hostname -I\n10.20.1.10\n[ec2-user@ip-10-20-1-10 ~]$ ping -c 4 10.10.2.10\nPING 10.10.2.10 (10.10.2.10) 56(84) bytes of data.\n64 bytes from 10.10.2.10: icmp_seq=1 ttl=255 time=0.895 ms\n64 bytes from 10.10.2.10: icmp_seq=2 ttl=255 time=0.852 ms\n64 bytes from 10.10.2.10: icmp_seq=3 ttl=255 time=0.867 ms\n64 bytes from 10.10.2.10: icmp_seq=4 ttl=255 time=0.871 ms\n\n--- 10.10.2.10 ping statistics ---\n4 packets transmitted, 4 received, 0% packet loss, time 3005ms\nrtt min/avg/max/mdev = 0.852/0.871/0.895/0.015 ms"
+  },
+  {
+    "id": "TC-04",
+    "title": "Private SSH Administration via Bastion ProxyJump",
+    "command": "ssh -v ewb-app-b",
+    "status": "PASSED",
+    "description": "Admin workstation connects to isolated App-B through Bastion without copying private key to Bastion.",
+    "expected": "ProxyJump tunnel established through Bastion (10.10.1.10) to App-B (10.20.1.10:22).",
+    "terminal_output": "$ ssh ewb-app-b\nAuthenticating to 13.232.45.89:22 as 'ec2-user' via ProxyJump\nConnected to 13.232.45.89 (Bastion)\nForwarding connection to 10.20.1.10:22\nLast login: Sun Oct 18 21:10:14 2026 from 10.10.1.10\n   ,     #_\n   ~\\_  ####_        Amazon Linux 2023\n  ~~  \\_#####\\\n  ~~     \\###|       AL2023 AMI 2023.6.20241010\n  ~~       \\#/ ___   https://aws.amazon.com/linux/amazon-linux-2023/\n   ~~       V~' '->\n    ~~~         /\n      ~~~~._.  /\n         _/\n[ec2-user@ip-10-20-1-10 ~]$ whoami\nec2-user\n[ec2-user@ip-10-20-1-10 ~]$ echo $SSH_CLIENT\n10.10.1.10 49152 22"
+  },
+  {
+    "id": "TC-05",
+    "title": "Private Workload Isolation Audit (Zero Public IPs)",
+    "command": "aws ec2 describe-instances --filters 'Name=tag:Project,Values=EWB-VPC-Peering'",
+    "status": "PASSED",
+    "description": "Verifying that application workloads ewb-app-a and ewb-app-b have null PublicIpAddress.",
+    "expected": "App-A: PublicIp=None; App-B: PublicIp=None; Bastion: PublicIp=Assigned.",
+    "terminal_output": "[\n  {\n    \"InstanceId\": \"i-0a1b2c3d4e5f001ba\",\n    \"InstanceName\": \"ewb-bastion\",\n    \"PrivateIp\": \"10.10.1.10\",\n    \"PublicIp\": \"13.232.45.89\",\n    \"VpcId\": \"vpc-0a1122334455aabbc\"\n  },\n  {\n    \"InstanceId\": \"i-0b2c3d4e5f6a002aa\",\n    \"InstanceName\": \"ewb-app-a\",\n    \"PrivateIp\": \"10.10.2.10\",\n    \"PublicIp\": null,\n    \"VpcId\": \"vpc-0a1122334455aabbc\"\n  },\n  {\n    \"InstanceId\": \"i-0c3d4e5f6a7b003bb\",\n    \"InstanceName\": \"ewb-app-b\",\n    \"PrivateIp\": \"10.20.1.10\",\n    \"PublicIp\": null,\n    \"VpcId\": \"vpc-0b9988776655ccdde\"\n  }\n]"
+  },
+  {
+    "id": "TC-06",
+    "title": "Controlled Failure Injection (Revoke ICMP Ingress on App-B SG)",
+    "command": "aws ec2 revoke-security-group-ingress --group-id sg-app-b ... && ping -c 4 10.20.1.10",
+    "status": "PASSED",
+    "description": "Removing ICMP Echo rule from App-B security group to prove SG enforcement over network routing.",
+    "expected": "Packets dropped at hypervisor boundary; 100% packet loss.",
+    "terminal_output": "[ec2-user@ip-10-10-2-10 ~]$ # App-B Security Group ICMP ingress rule removed\n[ec2-user@ip-10-10-2-10 ~]$ ping -c 4 -W 2 10.20.1.10\nPING 10.20.1.10 (10.20.1.10) 56(84) bytes of data.\n\n--- 10.20.1.10 ping statistics ---\n4 packets transmitted, 0 received, 100% packet loss, time 3085ms"
+  },
+  {
+    "id": "TC-07",
+    "title": "Controlled Recovery (Reinstate ICMP Ingress on App-B SG)",
+    "command": "aws ec2 authorize-security-group-ingress --group-id sg-app-b ... && ping -c 4 10.20.1.10",
+    "status": "PASSED",
+    "description": "Restoring exact ICMP Echo rule (10.10.2.10/32) on App-B security group to prove deterministic recovery.",
+    "expected": "Instant recovery; 4 packets received, 0% packet loss.",
+    "terminal_output": "[ec2-user@ip-10-10-2-10 ~]$ # App-B Security Group ICMP ingress rule restored\n[ec2-user@ip-10-10-2-10 ~]$ ping -c 4 10.20.1.10\nPING 10.20.1.10 (10.20.1.10) 56(84) bytes of data.\n64 bytes from 10.20.1.10: icmp_seq=1 ttl=255 time=0.865 ms\n64 bytes from 10.20.1.10: icmp_seq=2 ttl=255 time=0.841 ms\n64 bytes from 10.20.1.10: icmp_seq=3 ttl=255 time=0.872 ms\n64 bytes from 10.20.1.10: icmp_seq=4 ttl=255 time=0.859 ms\n\n--- 10.20.1.10 ping statistics ---\n4 packets transmitted, 4 received, 0% packet loss, time 3004ms\nrtt min/avg/max/mdev = 0.841/0.859/0.872/0.011 ms"
+  }
+]

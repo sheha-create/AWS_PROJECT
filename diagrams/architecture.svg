@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="vpcaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0.1" />
+    </linearGradient>
+    <linearGradient id="vpcbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#065f46" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#065f46" stop-opacity="0.1" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="680" fill="url(#bg)" />
+
+  <!-- Header -->
+  <text x="550" y="45" font-family="system-ui, sans-serif" font-size="24" font-weight="bold" fill="#f8fafc" text-anchor="middle">
+    AWS VPC Peering Architecture — Dual VPC Private Interconnect
+  </text>
+  <text x="550" y="70" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">
+    Secure Inter-VPC Private IPv4 Routing &amp; Bastion ProxyJump Administration
+  </text>
+
+  <!-- Admin Laptop Workstation -->
+  <g transform="translate(40, 150)" filter="url(#shadow)">
+    <rect width="180" height="150" rx="10" fill="#334155" stroke="#64748b" stroke-width="2" />
+    <circle cx="90" cy="45" r="22" fill="#38bdf8" />
+    <text x="90" y="52" font-family="sans-serif" font-size="20" fill="#0f172a" text-anchor="middle">💻</text>
+    <text x="90" y="90" font-family="sans-serif" font-size="14" font-weight="bold" fill="#f8fafc" text-anchor="middle">Admin Laptop</text>
+    <text x="90" y="110" font-family="monospace" font-size="11" fill="#94a3b8" text-anchor="middle">Local ~/.ssh/ewb-lab.pem</text>
+    <text x="90" y="128" font-family="monospace" font-size="11" fill="#38bdf8" text-anchor="middle">ProxyJump Client</text>
+  </g>
+
+  <!-- VPC A Container -->
+  <g transform="translate(270, 110)" filter="url(#shadow)">
+    <rect width="360" height="520" rx="12" fill="url(#vpcaGrad)" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6,4" />
+    <text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#60a5fa">VPC A (ewb-vpc-a)</text>
+    <text x="20" y="48" font-family="monospace" font-size="12" fill="#93c5fd">CIDR: 10.10.0.0/16</text>
+
+    <!-- IGW -->
+    <rect x="20" y="65" width="320" height="40" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+    <text x="180" y="90" font-family="sans-serif" font-size="13" font-weight="bold" fill="#38bdf8" text-anchor="middle">🌐 Internet Gateway (ewb-igw-a)</text>
+
+    <!-- Public Subnet -->
+    <rect x="20" y="120" width="320" height="160" rx="8" fill="#1e293b" stroke="#0284c7" stroke-width="1.5" />
+    <text x="35" y="142" font-family="sans-serif" font-size="13" font-weight="bold" fill="#38bdf8">Public Subnet (ewb-a-public)</text>
+    <text x="35" y="158" font-family="monospace" font-size="11" fill="#7dd3fc">10.10.1.0/24 | Route: 0.0.0.0/0 → IGW</text>
+
+    <!-- Bastion Instance -->
+    <rect x="40" y="175" width="280" height="85" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="55" y="200" font-family="sans-serif" font-size="13" font-weight="bold" fill="#f8fafc">🛡️ Bastion (ewb-bastion)</text>
+    <text x="55" y="220" font-family="monospace" font-size="11" fill="#34d399">Public IP: 13.232.45.89</text>
+    <text x="55" y="238" font-family="monospace" font-size="11" fill="#94a3b8">Private IP: 10.10.1.10</text>
+    <text x="55" y="252" font-family="monospace" font-size="10" fill="#f59e0b">SG: Inbound TCP 22 (Admin Only)</text>
+
+    <!-- Private Subnet A -->
+    <rect x="20" y="300" width="320" height="195" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="1.5" />
+    <text x="35" y="322" font-family="sans-serif" font-size="13" font-weight="bold" fill="#a5b4fc">Private Subnet (ewb-a-private)</text>
+    <text x="35" y="338" font-family="monospace" font-size="11" fill="#c7d2fe">10.10.2.0/24 | No Internet Egress</text>
+
+    <!-- App-A Instance -->
+    <rect x="40" y="355" width="280" height="125" rx="6" fill="#0f172a" stroke="#818cf8" stroke-width="1.5" />
+    <text x="55" y="380" font-family="sans-serif" font-size="13" font-weight="bold" fill="#f8fafc">🖥️ App-A (ewb-app-a)</text>
+    <text x="55" y="400" font-family="monospace" font-size="11" fill="#ef4444">Public IP: NONE (Zero Public Exposure)</text>
+    <text x="55" y="418" font-family="monospace" font-size="11" fill="#34d399">Private IP: 10.10.2.10</text>
+    <text x="55" y="438" font-family="monospace" font-size="10" fill="#94a3b8">SG: Inbound TCP 22 from 10.10.1.10/32</text>
+    <text x="55" y="454" font-family="monospace" font-size="10" fill="#94a3b8">SG: Inbound ICMP from 10.20.1.10/32</text>
+    <text x="55" y="470" font-family="monospace" font-size="10" fill="#38bdf8">Route: 10.20.0.0/16 → pcx-xxxx</text>
+  </g>
+
+  <!-- VPC Peering Connection Tunnel (Middle) -->
+  <g transform="translate(645, 360)">
+    <rect x="0" y="0" width="60" height="90" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5" />
+    <text x="30" y="28" font-family="sans-serif" font-size="18" text-anchor="middle">⚡</text>
+    <text x="30" y="52" font-family="sans-serif" font-size="10" font-weight="bold" fill="#fbbf24" text-anchor="middle">VPC</text>
+    <text x="30" y="66" font-family="sans-serif" font-size="10" font-weight="bold" fill="#fbbf24" text-anchor="middle">PEERING</text>
+    <text x="30" y="80" font-family="monospace" font-size="8" fill="#34d399" text-anchor="middle">ACTIVE</text>
+  </g>
+
+  <!-- VPC B Container -->
+  <g transform="translate(720, 110)" filter="url(#shadow)">
+    <rect width="340" height="520" rx="12" fill="url(#vpcbGrad)" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4" />
+    <text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="bold" fill="#34d399">VPC B (ewb-vpc-b)</text>
+    <text x="20" y="48" font-family="monospace" font-size="12" fill="#6ee7b7">CIDR: 10.20.0.0/16 (Isolated Workload)</text>
+
+    <!-- No IGW Notice -->
+    <rect x="20" y="65" width="300" height="40" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+    <text x="170" y="90" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f87171" text-anchor="middle">🚫 No Internet Gateway Attached</text>
+
+    <!-- Private Subnet B -->
+    <rect x="20" y="120" width="300" height="375" rx="8" fill="#1e293b" stroke="#059669" stroke-width="1.5" />
+    <text x="35" y="145" font-family="sans-serif" font-size="13" font-weight="bold" fill="#34d399">Private Subnet (ewb-b-private)</text>
+    <text x="35" y="162" font-family="monospace" font-size="11" fill="#a7f3d0">10.20.1.0/24 | Air-gapped from Web</text>
+
+    <!-- App-B Instance -->
+    <rect x="35" y="200" width="270" height="260" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.5" />
+    <text x="50" y="230" font-family="sans-serif" font-size="14" font-weight="bold" fill="#f8fafc">🖥️ App-B (ewb-app-b)</text>
+    <text x="50" y="255" font-family="monospace" font-size="11" fill="#ef4444">Public IP: NONE (Zero Public Exposure)</text>
+    <text x="50" y="278" font-family="monospace" font-size="11" fill="#34d399">Private IP: 10.20.1.10</text>
+    <text x="50" y="305" font-family="monospace" font-size="10" fill="#94a3b8">SG: Inbound TCP 22 from 10.10.1.10/32</text>
+    <text x="50" y="325" font-family="monospace" font-size="10" fill="#94a3b8">SG: Inbound ICMP from 10.10.2.10/32</text>
+    <text x="50" y="350" font-family="monospace" font-size="11" fill="#38bdf8">Route: 10.10.0.0/16 → pcx-xxxx</text>
+    <text x="50" y="375" font-family="monospace" font-size="11" fill="#94a3b8">Default Local: 10.20.0.0/16 local</text>
+    <text x="50" y="410" font-family="sans-serif" font-size="11" fill="#fbbf24">Role: Secure Private Target Workload</text>
+    <text x="50" y="430" font-family="sans-serif" font-size="11" fill="#6ee7b7">Reachability: Symmetrical Peering Only</text>
+  </g>
+
+  <!-- Connectors & Data Paths -->
+  <!-- 1. SSH from Laptop to Bastion -->
+  <path d="M 220 225 L 310 225" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="4,4" />
+  <text x="260" y="215" font-family="monospace" font-size="10" fill="#38bdf8" text-anchor="middle">SSH :22</text>
+
+  <!-- 2. Peering Traffic App-A to App-B -->
+  <path d="M 590 410 L 645 410" fill="none" stroke="#fbbf24" stroke-width="3" />
+  <path d="M 705 410 L 755 410" fill="none" stroke="#fbbf24" stroke-width="3" />
+  <text x="675" y="350" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">Bidirectional ICMP / SSH</text>
+
+  <!-- Legend Footer -->
+  <rect x="40" y="640" width="1020" height="30" rx="4" fill="#1e293b" />
+  <circle cx="65" cy="655" r="5" fill="#38bdf8" />
+  <text x="75" y="659" font-family="sans-serif" font-size="11" fill="#cbd5e1">Public Subnet (Internet Egress)</text>
+  <circle cx="270" cy="655" r="5" fill="#818cf8" />
+  <text x="280" y="659" font-family="sans-serif" font-size="11" fill="#cbd5e1">Private Subnet A</text>
+  <circle cx="410" cy="655" r="5" fill="#10b981" />
+  <text x="420" y="659" font-family="sans-serif" font-size="11" fill="#cbd5e1">Private Subnet B (No IGW)</text>
+  <circle cx="600" cy="655" r="5" fill="#fbbf24" />
+  <text x="610" y="659" font-family="sans-serif" font-size="11" fill="#cbd5e1">AWS VPC Peering Connection (Direct Private Link)</text>
+  <text x="960" y="659" font-family="monospace" font-size="11" fill="#34d399">Status: Verified 100%</text>
+</svg>
