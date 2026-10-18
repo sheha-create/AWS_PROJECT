@@ -159,8 +159,8 @@ def build_pdf(filename="YourName_EWB_VPC_Peering.pdf"):
         [Paragraph("<b>Mentor / Evaluator:</b>", style_body), Paragraph("[Mentor Name / EWB Evaluator]", style_body)],
         [Paragraph("<b>Target AWS Region:</b>", style_body), Paragraph("ap-south-1 (Mumbai)", style_body)],
         [Paragraph("<b>Submission Date:</b>", style_body), Paragraph("[October 2026 / Submission Date]", style_body)],
-        [Paragraph("<b>GitHub Code Link:</b>", style_body), Paragraph("https://github.com/[YOUR_USERNAME]/[YOUR_REPO]", style_body)],
-        [Paragraph("<b>Live Showcase Link:</b>", style_body), Paragraph("https://[YOUR_USERNAME].github.io/[YOUR_REPO]/", style_body)],
+        [Paragraph("<b>GitHub Code Link:</b>", style_body), Paragraph("https://github.com/sheha-create/AWS_PROJECT", style_body)],
+        [Paragraph("<b>Live Showcase Link:</b>", style_body), Paragraph("https://sheha-create.github.io/AWS_PROJECT/", style_body)],
         [Paragraph("<b>Verification Status:</b>", style_body), Paragraph("<font color='#059669'><b>100% Complete · 7/7 Tests Passed</b></font>", style_body)],
     ]
     t_meta = Table(meta_table_data, colWidths=[140, 360])

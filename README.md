@@ -1,10 +1,14 @@
 # AWS VPC Peering: Connect Two VPCs and Prove Private Connectivity
 
-[![Live Showcase](https://img.shields.io/badge/Live%20Showcase-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://github.com)
+[![Live Showcase](https://img.shields.io/badge/Live%20Showcase-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://sheha-create.github.io/AWS_PROJECT/)
 [![Infrastructure](https://img.shields.io/badge/AWS-VPC%20Peering-orange?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/vpc/)
 [![Terraform](https://img.shields.io/badge/IaC-Terraform-623CE4?style=for-the-badge&logo=terraform)](https://www.terraform.io/)
 [![Python](https://img.shields.io/badge/SDK-Boto3-3776AB?style=for-the-badge&logo=python)](https://boto3.amazonaws.com/)
 [![Tests](https://img.shields.io/badge/Tests-7%2F7%20Passed-success?style=for-the-badge)](./test_evidence/TEST_EVIDENCE.md)
+
+**GitHub Code Repository**: [https://github.com/sheha-create/AWS_PROJECT](https://github.com/sheha-create/AWS_PROJECT)  
+**Live Showcase Link**: [https://sheha-create.github.io/AWS_PROJECT/](https://sheha-create.github.io/AWS_PROJECT/)  
+
 
 An end-to-end cloud networking engineering project connecting two isolated Amazon VPCs (`10.10.0.0/16` and `10.20.0.0/16`) via a private AWS VPC Peering connection, validating cross-VPC private IPv4 connectivity, enforcing zero public IP exposure on backend workloads, demonstrating secure OpenSSH `ProxyJump` jump-host administration, and conducting controlled failure/recovery validation.
 
